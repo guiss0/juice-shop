@@ -47,5 +47,5 @@ WORKDIR /juice-shop
 COPY --from=installer --chown=65532:0 /juice-shop .
 COPY --chown=65532:0 --from=libxmljs-builder /juice-shop/node_modules/libxmljs ./node_modules/libxmljs
 USER 65532
-EXPOSE 3000
+EXPOSE 127.1.0.1:3000
 CMD ["/juice-shop/build/app.js"]
