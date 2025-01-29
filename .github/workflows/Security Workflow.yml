@@ -24,7 +24,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Contenedor-Web
-        run: docker build -t juice-shop Dockerfile && docker run -d --name juice-shop juice-shop
+        run: docker build -t juice-shop juice-shop/blob/master/Dockerfile && docker run -d --name juice-shop juice-shop
 
   zap_scan:
     runs-on: ubuntu-latest
