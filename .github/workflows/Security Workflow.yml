@@ -17,24 +17,22 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v4
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  Contenedor-Web:
-    runs-on: ubuntu-latest
-    name: Contenedor-Web
-    steps: 
-      - uses: actions/checkout@v4
-
-      - name: Contenedor-Web
-        run: docker build -t juice-shop Dockerfile && docker run -d --name juice-shop juice-shop
-
   zap_scan:
     runs-on: ubuntu-latest
-    needs: Contenedor-Web
-    name: Scan the webapplication
+    name: Scan the web application
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          ref: master
+
+      - name: Build and Run Juice Shop
+        run: |
+          git clone https://github.com/juice-shop/juice-shop.git
+          cd juice-shop
+          docker build -t juice-shop .
+          docker run -d -p 3000:3000 --name juice-shop juice-shop
+          sleep 10  # Espera a que el servicio se inicie
+          curl -I http://localhost:3000 || (echo "Juice Shop no está corriendo" && exit 1)
+
       - name: ZAP Scan
         uses: zaproxy/action-baseline@v0.14.0
         with:
@@ -42,3 +40,7 @@ jobs:
           target: 'http://localhost:3000'
           rules_file_name: '.zap/rules.tsv'
           cmd_options: '-a'
+
+      - name: Stop and Remove Container
+        if: always()
+        run: docker stop juice-shop && docker rm juice-shop
