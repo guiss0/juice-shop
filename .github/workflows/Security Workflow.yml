@@ -38,6 +38,27 @@ jobs:
         with:
           name: gitleaks-report
           path: gitleaks-report.json
+  generate-sbom:
+    name: Generate SBOM
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Syft
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+          syft --version  # Verificar la instalación
+
+      - name: Generate SBOM (CycloneDX Format)
+        run: syft . -o cyclonedx-json > sbom.json
+
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: sbom.json
+          retention-days: 7
   zap_scan:
     runs-on: ubuntu-latest
     name: Scan the web application
