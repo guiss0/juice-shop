@@ -51,7 +51,8 @@ jobs:
           syft --version  # Verificar la instalación
 
       - name: Generate SBOM (CycloneDX Format)
-        run: syft . -o cyclonedx-json > sbom.json
+        run: |
+          syft dir:. -o spdx-json > sbom.json
 
       - name: Upload SBOM artifact
         uses: actions/upload-artifact@v4
