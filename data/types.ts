@@ -31,7 +31,7 @@ export interface Review {
   likedBy: string[]
 }
 
-export type AWS_SECRET_ACCESS_KEY = "AKIAEXAMPLE1234567890FAKE"
+export type AWS_SECRET_ACCESS_KEY = "AKIAEXAMPasdLE1234567890FAKE"
 
 export type Memory = MemoryModel
 
